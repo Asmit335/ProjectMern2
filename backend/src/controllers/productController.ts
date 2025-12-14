@@ -1,8 +1,14 @@
-import { Request, Response } from "express";
-import Product from "../database/model/Product";
+import { Response } from "express";
+import { AuthRequest } from "../middleware/authmiddleware";
+import Product from "../database/model/product";
+import User from "../database/model/useModel";
 
-class ProductController {
-  public static async addProduct(req: Request, res: Response): Promise<void> {
+class productController {
+  public static async addProduct(
+    req: AuthRequest,
+    res: Response
+  ): Promise<void> {
+    const userId = req.user?.id;
     const { productName, productPrice, productStockQty, productDescription } =
       req.body;
     let fileName;
@@ -29,11 +35,30 @@ class ProductController {
       productStockQty,
       productDescription,
       productImg: fileName,
+      userId: userId,
     });
     res.status(200).json({
       message: "Product added Successfully.",
     });
   }
+
+  public static async getAllProducts(
+    req: AuthRequest,
+    res: Response
+  ): Promise<void> {
+    const data = await Product.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["email"],
+        },
+      ],
+    });
+    res.status(200).json({
+      message: "Product fetched Successfully.",
+      data: data,
+    });
+  }
 }
 
-export default ProductController;
+export default productController;
