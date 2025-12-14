@@ -50,7 +50,7 @@ class productController {
       include: [
         {
           model: User,
-          attributes: ["email"],
+          attributes: ["email", "userName"],
         },
       ],
     });
@@ -58,6 +58,74 @@ class productController {
       message: "Product fetched Successfully.",
       data: data,
     });
+  }
+  public static async getSingleProduct(
+    req: AuthRequest,
+    res: Response
+  ): Promise<void> {
+    const { id } = req.params;
+    const data = await Product.findByPk(id);
+    if (!data) {
+      res.status(404).json({
+        message: "No product with the given Id.",
+      });
+      return;
+    }
+    res.status(200).json({
+      message: "Product fetched Successfully.",
+      data: data,
+    });
+  }
+  public static async deleteSingleProduct(
+    req: AuthRequest,
+    res: Response
+  ): Promise<void> {
+    const { id } = req.params;
+    const data = await Product.findByPk(id);
+    if (!data) {
+      res.status(404).json({
+        message: "No product with the given Id.",
+      });
+      return;
+    }
+    await Product.destroy();
+    res.status(200).json({
+      message: "Product deleted Successfully.",
+    });
+  }
+
+  public static async updateProduct(
+    req: AuthRequest,
+    res: Response
+  ): Promise<void> {
+    const { id } = req.params;
+    const { productName, productStockQty, productDescription, productPrice } =
+      req.body;
+    const data = await Product.findByPk(id);
+    if (!data) {
+      res.status(404).json({
+        message: "No product with the given Id.",
+      });
+      return;
+    }
+    let imageUrl = data.productImg;
+    if (req.file) {
+      imageUrl = req.file.path;
+    }
+    await Product.update(
+      {
+        productName,
+        productPrice,
+        productDescription,
+        productStockQty,
+        imageUrl,
+      },
+      { where: { id } }
+    );
+    res.status(200).json({
+      message: "Product updated Successfully.",
+    });
+    return;
   }
 }
 

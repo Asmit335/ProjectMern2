@@ -17,4 +17,13 @@ router
   )
   .get(productController.getAllProducts);
 
+router
+  .route("/:id")
+  .get(productController.getSingleProduct)
+  .delete(
+    authmiddleware.isAuthenticated,
+    authmiddleware.restricTo(Role.Admin),
+    productController.deleteSingleProduct
+  );
+
 export default router;
