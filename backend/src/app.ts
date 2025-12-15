@@ -10,11 +10,11 @@ import deleteRoute from "./route/productRoute";
 import adminSeeder from "./adminSeeder";
 app.use(express.json());
 
-adminSeeder();
 app.use("/", userRoute);
 app.use("/admin/addProduct", productRoute);
 app.use("/admin/deleteProduct", deleteRoute);
 
+adminSeeder();
 app.listen(PORT, async () => {
   console.log(`Server is running in Port ${PORT}`);
 });

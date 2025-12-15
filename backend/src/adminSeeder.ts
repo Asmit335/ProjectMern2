@@ -1,7 +1,7 @@
 import User from "./database/model/useModel";
 import bcrypt from "bcrypt";
 const adminSeeder = async (): Promise<void> => {
-  const [data] = await User.findAll({
+  const data = await User.findOne({
     where: {
       email: "akadmin@gmail.com",
     },

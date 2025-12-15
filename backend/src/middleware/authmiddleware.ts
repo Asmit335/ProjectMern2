@@ -31,7 +31,7 @@ class AuthMiddleware {
       return;
     }
     jwt.verify(
-      token,
+      // token,
       process.env.TOKEN as string,
       async (err, decoded: any) => {
         if (err) {
